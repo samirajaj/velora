@@ -1,8 +1,22 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+@model HomeViewModel
+@{
+    ViewData["Title"] = "Modern Fashion";
+    ViewData["Description"] = "Discover Velora's latest collection of refined dresses, modern tailoring, and sculptural accessories.";
 }
-
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<section class="hero">
+    <img src="~/assets/brand/og.png" alt="Velora modern fashion" />
+    <div class="hero-overlay"></div>
+    <div class="hero-content"><p class="eyebrow">The new collection · 2026</p><h1>Elegance, in<br /><em>every gesture.</em></h1><a class="button button-light" asp-controller="Product" asp-action="Index">Discover the collection</a></div>
+    <span class="hero-scroll">Scroll to explore</span>
+</section>
+<section class="intro section shell-narrow reveal"><p class="eyebrow">The Velora point of view</p><h2>Modern pieces with a sense of <em>permanence.</em></h2><p>We believe in the quiet power of an exceptional silhouette. Each piece is selected for how it moves, feels, and lives beyond a single season.</p></section>
+<section class="section shell">
+    <div class="section-heading reveal"><div><p class="eyebrow">Curated for you</p><h2>New signatures</h2></div><a class="text-link" asp-controller="Product" asp-action="Index">View all pieces <span>→</span></a></div>
+    <div class="product-grid">@foreach (var product in Model.FeaturedProducts) { <partial name="_ProductCard" model="product" /> }</div>
+</section>
+<section class="editorial-break reveal"><div class="editorial-image"><img src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=1400&q=88" alt="Editorial fashion styling" loading="lazy" /></div><div class="editorial-copy"><p class="eyebrow">The journal · No. 01</p><h2>The art of<br /><em>getting dressed</em></h2><p>A study in thoughtful layers, luminous neutrals, and the confidence of simplicity.</p><a class="text-link" asp-controller="Product" asp-action="Index">Explore the edit <span>→</span></a></div></section>
+<section class="section shell">
+    <div class="section-heading centered reveal"><div><p class="eyebrow">Find your expression</p><h2>Shop by mood</h2></div></div>
+    <div class="category-grid">@foreach (var category in Model.Categories) { <a class="category-card reveal" asp-controller="Product" asp-action="Index" asp-route-category="@category.Slug"><img src="@category.ImageUrl" alt="@category.Name" loading="lazy" /><span><strong>@category.Name</strong><small>@category.Description</small></span></a> }</div>
+</section>
+<section class="service-strip"><div><span>◇</span><h3>Complimentary delivery</h3><p>On every order over $200</p></div><div><span>↻</span><h3>Considered returns</h3><p>Within 30 days of delivery</p></div><div><span>✦</span><h3>Personal assistance</h3><p>Here whenever you need us</p></div></section>

@@ -1,0 +1,5 @@
+@model Velora.Application.Catalog.ProductCard
+<article class="product-card reveal">
+    <a class="product-image" asp-controller="Product" asp-action="Details" asp-route-slug="@Model.Slug"><img src="@Model.ImageUrl" alt="@Model.Name" loading="lazy" />@if (Model.IsNew) { <span class="product-badge">New</span> }<span class="product-action">View piece</span></a>
+    <div class="product-meta"><div><p>@Model.CategoryName</p><h3><a asp-controller="Product" asp-action="Details" asp-route-slug="@Model.Slug">@Model.Name</a></h3></div><p class="price">$@Model.Price.ToString("N0") @if (Model.CompareAtPrice is not null) { <del>$@Model.CompareAtPrice.Value.ToString("N0")</del> }</p></div>
+</article>

@@ -1,49 +1,64 @@
-﻿<!DOCTYPE html>
+@using Velora.Features.Cart
+@inject ICartService Cart
+@{
+    var cartCount = Cart.GetCart().ItemCount;
+    var pageDescription = ViewData["Description"] as string ?? "Velora — refined modern fashion, thoughtfully made for an enduring wardrobe.";
+}
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Velora</title>
-    <script type="importmap"></script>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <meta name="description" content="@pageDescription" />
+    <meta property="og:title" content="@(ViewData["Title"] ?? "Velora")" />
+    <meta property="og:description" content="@pageDescription" />
+    <meta property="og:image" content="@Url.Content("~/assets/brand/og.png")" />
+    <title>@(ViewData["Title"] is null ? "Velora" : $"{ViewData["Title"]} — Velora")</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400;6..96,500;6..96,600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+    <link rel="icon" type="image/png" sizes="512x512" href="~/assets/brand/favicon.png" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/Velora.styles.css" asp-append-version="true" />
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Velora</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
-
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2026 - Velora - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+    <div class="announcement">Complimentary delivery on orders over $200</div>
+    <header class="site-header" data-header>
+        <div class="shell nav-shell">
+            <button class="icon-button menu-button" type="button" data-menu-button aria-label="Open menu" aria-expanded="false"><span></span><span></span></button>
+            <nav class="main-nav" data-menu aria-label="Main navigation">
+                <a asp-controller="Product" asp-action="Index">New in</a>
+                <a asp-controller="Product" asp-action="Index" asp-route-category="dresses">Dresses</a>
+                <a asp-controller="Product" asp-action="Index" asp-route-category="tailoring">Tailoring</a>
+            </nav>
+            <a class="brand" asp-controller="Home" asp-action="Index" aria-label="Velora home"><img src="~/assets/brand/logo.png" alt="Velora" /><span>Velora</span></a>
+            <nav class="utility-nav" aria-label="Utility navigation">
+                <button class="icon-button search-button" type="button" data-search-button aria-label="Search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"></circle><path d="m16 16 4 4"></path></svg></button>
+                @if (User.Identity?.IsAuthenticated == true)
+                {
+                    @if (User.IsInRole(AppRoles.Admin)) { <a class="account-link" asp-area="Admin" asp-controller="Dashboard" asp-action="Index">Admin</a> }
+                    <form class="logout-form" asp-area="" asp-controller="Account" asp-action="Logout" method="post"><button type="submit">Sign out</button></form>
+                }
+                else
+                {
+                    <a class="account-link" asp-area="" asp-controller="Account" asp-action="Login">Account</a>
+                }
+                <a class="bag-link" asp-controller="Cart" asp-action="Index">Bag <span>(@cartCount)</span></a>
+            </nav>
         </div>
+        <form class="search-panel" asp-controller="Product" asp-action="Index" method="get" data-search-panel><label for="site-search">What are you looking for?</label><div><input id="site-search" type="search" name="search" placeholder="Search the collection" /><button type="submit">Search</button></div></form>
+    </header>
+
+    <main>@RenderBody()</main>
+
+    <footer class="site-footer">
+        <div class="shell footer-grid">
+            <div class="footer-brand"><span>Velora</span><p>Quiet luxury, considered for every day.</p></div>
+            <div><h2>Explore</h2><a asp-controller="Product" asp-action="Index">Shop all</a><a asp-controller="Product" asp-action="Index" asp-route-sort="newest">New arrivals</a><a asp-controller="Product" asp-action="Index" asp-route-category="accessories">Accessories</a></div>
+            <div><h2>Client care</h2><a href="#">Delivery & returns</a><a href="#">Size guide</a><a href="mailto:hello@velora.com">Contact</a></div>
+            <div class="newsletter"><h2>Private notes</h2><p>New collections and stories, shared occasionally.</p><form><input type="email" aria-label="Email address" placeholder="Email address" /><button type="submit" aria-label="Subscribe">→</button></form></div>
+        </div>
+        <div class="shell footer-bottom"><span>© @DateTime.UtcNow.Year Velora</span><a asp-controller="Home" asp-action="Privacy">Privacy</a><span>Designed with intention</span></div>
     </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>

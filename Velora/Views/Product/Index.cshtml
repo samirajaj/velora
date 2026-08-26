@@ -1,0 +1,14 @@
+@model Velora.Application.Catalog.CatalogResult
+@{
+    ViewData["Title"] = "The Collection";
+    var category = ViewData["Category"] as string;
+    var search = ViewData["Search"] as string;
+    var sort = ViewData["Sort"] as string ?? "featured";
+}
+<header class="page-hero shell"><p class="eyebrow">Velora collection</p><h1>@(string.IsNullOrWhiteSpace(search) ? "The collection" : $"Results for “{search}”")</h1><p>Considered silhouettes for an expressive, enduring wardrobe.</p></header>
+<section class="catalog shell">
+    <form class="catalog-toolbar" method="get"><div class="category-filters"><a class="@(string.IsNullOrEmpty(category) ? "active" : "")" asp-action="Index">All</a>@foreach (var item in Model.Categories) { <a class="@(category == item.Slug ? "active" : "")" asp-action="Index" asp-route-category="@item.Slug">@item.Name</a> }</div>@if (!string.IsNullOrWhiteSpace(category)) { <input type="hidden" name="category" value="@category" /> }@if (!string.IsNullOrWhiteSpace(search)) { <input type="hidden" name="search" value="@search" /> }<label>Sort by <select name="sort" onchange="this.form.submit()"><option value="featured" selected="@(sort == "featured")">Featured</option><option value="newest" selected="@(sort == "newest")">Newest</option><option value="price-asc" selected="@(sort == "price-asc")">Price, low to high</option><option value="price-desc" selected="@(sort == "price-desc")">Price, high to low</option></select></label></form>
+    <p class="result-count">@Model.TotalItems @(Model.TotalItems == 1 ? "piece" : "pieces")</p>
+    @if (Model.Items.Count == 0) { <div class="empty-state"><h2>No pieces found</h2><p>Try another search or explore the complete collection.</p><a class="button button-dark" asp-action="Index">Shop all</a></div> } else { <div class="product-grid catalog-grid">@foreach (var product in Model.Items) { <partial name="_ProductCard" model="product" /> }</div> }
+    @if (Model.TotalPages > 1) { <nav class="pagination" aria-label="Catalog pages">@for (var i = 1; i <= Model.TotalPages; i++) { <a class="@(i == Model.Page ? "active" : "")" asp-route-page="@i" asp-route-category="@category" asp-route-search="@search" asp-route-sort="@sort">@i</a> }</nav> }
+</section>
