@@ -2,6 +2,8 @@
 
 Velora is a fashion commerce application built with ASP.NET Core MVC, .NET 10, EF Core 10, SQL Server, ASP.NET Core Identity, and Cloudinary.
 
+Public website: <http://velora-website.runasp.net/>
+
 ## Architecture
 
 The solution is a Clean Architecture modular monolith:
@@ -30,9 +32,7 @@ Install the SDK selected by `global.json`, then configure secrets:
 ```powershell
 dotnet user-secrets set "ConnectionStrings:DefaultConnection" "YOUR_SQL_CONNECTION" --project Velora
 dotnet user-secrets set "Cloudinary:Url" "cloudinary://KEY:SECRET@CLOUD" --project Velora
-dotnet user-secrets set "Email:Host" "smtp.example.com" --project Velora
-dotnet user-secrets set "Email:UserName" "SMTP_USER" --project Velora
-dotnet user-secrets set "Email:Password" "SMTP_PASSWORD" --project Velora
+dotnet user-secrets set "Email:Password" "GMAIL_APP_PASSWORD" --project Velora
 dotnet user-secrets set "SeedAdmin:Email" "admin@example.com" --project Velora
 dotnet user-secrets set "SeedAdmin:Password" "A-STRONG-UNIQUE-PASSWORD" --project Velora
 dotnet tool restore
@@ -41,6 +41,10 @@ dotnet run --project Velora
 ```
 
 In Development only, startup applies pending migrations and inserts starter catalog data. Production startup never applies migrations.
+
+The public sender and contact address is `massaging.system.manager@gmail.com`. SMTP host, port, username, and sender defaults are in `appsettings.json`; keep the Gmail app password in User Secrets locally and in the hosting provider's secret manager in production. Gmail requires an app password for this SMTP setup, not the normal account password.
+
+Administrator policies require both the `Admin` role and a completed two-factor-authentication sign-in. An administrator must enable TOTP from `/my-account/two-factor`, save the recovery codes, sign out, and sign in again with the authenticator code before opening `/Admin`.
 
 ## Database deployment
 

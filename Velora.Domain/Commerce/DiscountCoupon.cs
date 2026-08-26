@@ -1,7 +1,5 @@
 namespace Velora.Domain.Commerce;
 
-public enum DiscountType { Percentage, FixedAmount }
-
 public sealed class DiscountCoupon
 {
     public Guid Id { get; set; }

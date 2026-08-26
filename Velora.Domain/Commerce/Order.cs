@@ -1,9 +1,5 @@
 namespace Velora.Domain.Commerce;
 
-public enum OrderStatus { Pending, Confirmed, Processing, Shipped, Delivered, Cancelled }
-public enum PaymentStatus { Pending, DueOnDelivery, Paid, Failed, Refunded, Cancelled }
-public enum ShipmentStatus { Pending, Preparing, Shipped, Delivered, Returned }
-
 public sealed class Order
 {
     public Guid Id { get; set; }

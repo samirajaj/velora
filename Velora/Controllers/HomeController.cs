@@ -19,6 +19,12 @@ public class HomeController(IProductCatalogService catalog) : Controller
 
     public IActionResult Privacy() => View();
 
+    public IActionResult DeliveryReturns() => View();
+
+    public IActionResult SizeGuide() => View();
+
+    public IActionResult Contact() => View();
+
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error() => View(new ErrorViewModel
     {

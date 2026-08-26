@@ -17,6 +17,8 @@ using Velora.Infrastructure.Commerce;
 using Velora.Infrastructure.Communication;
 using Velora.Infrastructure.Health;
 using Velora.Infrastructure.Observability;
+using Velora.Application.Marketing;
+using Velora.Infrastructure.Marketing;
 
 namespace Velora.Infrastructure;
 
@@ -67,6 +69,7 @@ public static class DependencyInjection
         services.AddScoped<ICheckoutService, CheckoutService>();
         services.AddScoped<IAdminCommerceService, AdminCommerceService>();
         services.AddScoped<ITransactionalEmailSender, SmtpEmailSender>();
+        services.AddScoped<INewsletterService, NewsletterService>();
         services.AddSingleton<OrderMetrics>();
         services.AddHealthChecks()
             .AddCheck<DatabaseHealthCheck>("sql", tags: ["ready"])

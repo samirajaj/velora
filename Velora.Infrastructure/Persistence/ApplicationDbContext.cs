@@ -6,6 +6,7 @@ using Velora.Infrastructure.Identity;
 using Velora.Domain.Administration;
 using Velora.Domain.Commerce;
 using Velora.Domain.Customers;
+using Velora.Domain.Marketing;
 
 namespace Velora.Infrastructure.Persistence;
 
@@ -30,6 +31,7 @@ public sealed class ApplicationDbContext(DbContextOptions<ApplicationDbContext> 
     public DbSet<OrderStatusHistory> OrderStatusHistory => Set<OrderStatusHistory>();
     public DbSet<DiscountCoupon> DiscountCoupons => Set<DiscountCoupon>();
     public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
+    public DbSet<NewsletterSubscriber> NewsletterSubscribers => Set<NewsletterSubscriber>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

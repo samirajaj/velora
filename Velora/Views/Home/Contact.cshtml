@@ -1,0 +1,5 @@
+@using Microsoft.Extensions.Options
+@using Velora.Configuration
+@inject IOptions<SiteOptions> Site
+@{ ViewData["Title"] = "Contact"; }
+<section class="account-page shell-narrow"><div class="account-card care-page"><p class="eyebrow">Client care</p><h1>Contact Velora</h1><p class="account-intro">For orders, delivery, sizing, and product questions, our team is available by email.</p><a class="button button-dark" href="mailto:@Site.Value.ContactEmail">Email client care</a><p><a href="mailto:@Site.Value.ContactEmail">@Site.Value.ContactEmail</a></p></div></section>
