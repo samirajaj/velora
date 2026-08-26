@@ -13,6 +13,9 @@ internal sealed class CategoryConfiguration : IEntityTypeConfiguration<Category>
         builder.Property(x => x.Slug).HasMaxLength(120).IsRequired();
         builder.Property(x => x.Description).HasMaxLength(500);
         builder.Property(x => x.ImageUrl).HasMaxLength(1_000);
+        builder.Property(x => x.SeoTitle).HasMaxLength(160);
+        builder.Property(x => x.SeoDescription).HasMaxLength(320);
         builder.HasIndex(x => x.Slug).IsUnique();
+        builder.HasIndex(x => new { x.IsActive, x.IsArchived, x.DisplayOrder });
     }
 }

@@ -6,4 +6,5 @@ public interface ICartService
     void Add(CartItem item);
     void Update(Guid variantId, int quantity);
     void Remove(Guid variantId);
+    void Clear();
 }

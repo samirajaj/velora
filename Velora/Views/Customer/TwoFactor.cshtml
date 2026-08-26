@@ -1,0 +1,13 @@
+@model Velora.Features.Accounts.AuthenticatorViewModel
+@{ ViewData["Title"] = "Two-factor authentication"; }
+<section class="account-shell narrow-shell">
+    <p class="eyebrow">Account security</p><h1>Set up two-factor authentication</h1>
+    <p>Add a new account in Microsoft Authenticator, Google Authenticator, 1Password, or another TOTP app.</p>
+    <p>Enter this setup key:</p><code class="setup-key">@Model.SharedKey</code>
+    <details><summary>Advanced setup URI</summary><code class="break-code">@Model.AuthenticatorUri</code></details>
+    <form method="post" class="account-form">
+        <input asp-for="SharedKey" type="hidden" /><input asp-for="AuthenticatorUri" type="hidden" />
+        <label asp-for="Code">Verification code</label><input asp-for="Code" inputmode="numeric" autocomplete="one-time-code" /><span asp-validation-for="Code"></span>
+        <button class="button button-dark" type="submit">Enable two-factor authentication</button>
+    </form>
+</section>

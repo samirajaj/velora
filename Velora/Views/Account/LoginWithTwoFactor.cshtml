@@ -1,0 +1,13 @@
+@model Velora.Features.Accounts.TwoFactorLoginViewModel
+@{ ViewData["Title"] = "Authenticator code"; }
+<section class="account-shell narrow-shell">
+    <p class="eyebrow">Secure sign in</p><h1>Authenticator code</h1>
+    <form method="post" class="account-form">
+        <div asp-validation-summary="ModelOnly" class="validation-summary"></div>
+        <input asp-for="ReturnUrl" type="hidden" /><input asp-for="RememberMe" type="hidden" />
+        <label asp-for="Code">Six-digit code</label><input asp-for="Code" inputmode="numeric" autocomplete="one-time-code" autofocus /><span asp-validation-for="Code"></span>
+        <label class="check-row"><input asp-for="RememberMachine" /> Trust this device</label>
+        <button class="button button-dark" type="submit">Sign in</button>
+        <a asp-action="LoginWithRecoveryCode" asp-route-returnUrl="@Model.ReturnUrl">Use a recovery code</a>
+    </form>
+</section>

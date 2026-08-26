@@ -14,6 +14,7 @@ internal sealed class ProductVariantConfiguration : IEntityTypeConfiguration<Pro
         builder.Property(x => x.ColorHex).HasMaxLength(7).IsRequired();
         builder.Property(x => x.Size).HasMaxLength(20).IsRequired();
         builder.HasIndex(x => x.Sku).IsUnique();
+        builder.HasIndex(x => new { x.ProductId, x.IsActive, x.StockQuantity });
         builder.HasOne(x => x.Product)
             .WithMany(x => x.Variants)
             .HasForeignKey(x => x.ProductId)

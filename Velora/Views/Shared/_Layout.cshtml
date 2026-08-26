@@ -2,6 +2,9 @@
 @inject ICartService Cart
 @{
     var cartCount = Cart.GetCart().ItemCount;
+    var canonicalUrl = $"{Context.Request.Scheme}://{Context.Request.Host}{Context.Request.Path}";
+    var shareImage = ViewData["Image"] as string ?? Url.Content("~/assets/brand/og.png")!;
+    var absoluteShareImage = Uri.TryCreate(shareImage, UriKind.Absolute, out _) ? shareImage : $"{Context.Request.Scheme}://{Context.Request.Host}{shareImage}";
     var pageDescription = ViewData["Description"] as string ?? "Velora — refined modern fashion, thoughtfully made for an enduring wardrobe.";
 }
 <!DOCTYPE html>
@@ -12,7 +15,10 @@
     <meta name="description" content="@pageDescription" />
     <meta property="og:title" content="@(ViewData["Title"] ?? "Velora")" />
     <meta property="og:description" content="@pageDescription" />
-    <meta property="og:image" content="@Url.Content("~/assets/brand/og.png")" />
+    <meta property="og:image" content="@absoluteShareImage" />
+    <meta property="og:url" content="@canonicalUrl" />
+    <meta property="og:type" content="website" />
+    <link rel="canonical" href="@canonicalUrl" />
     <title>@(ViewData["Title"] is null ? "Velora" : $"{ViewData["Title"]} — Velora")</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -36,6 +42,7 @@
                 @if (User.Identity?.IsAuthenticated == true)
                 {
                     @if (User.IsInRole(AppRoles.Admin)) { <a class="account-link" asp-area="Admin" asp-controller="Dashboard" asp-action="Index">Admin</a> }
+                    <a class="account-link" asp-area="" asp-controller="Customer" asp-action="Index">My account</a>
                     <form class="logout-form" asp-area="" asp-controller="Account" asp-action="Logout" method="post"><button type="submit">Sign out</button></form>
                 }
                 else

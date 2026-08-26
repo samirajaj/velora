@@ -1,0 +1,3 @@
+@model IReadOnlyList<AdminAuditItem>
+@{ ViewData["Title"] = "Audit History"; }
+<section class="admin-page shell"><header><p class="eyebrow">Security</p><h1>Audit history</h1></header><div class="admin-table-wrap"><table class="admin-table"><thead><tr><th>Time</th><th>Action</th><th>Entity</th><th>Administrator</th><th>IP</th><th>Details</th></tr></thead><tbody>@foreach (var item in Model) { <tr><td>@item.CreatedAtUtc.ToString("u")</td><td>@item.Action</td><td>@item.EntityName / @item.EntityId</td><td>@item.UserId</td><td>@item.IpAddress</td><td><code>@item.Details</code></td></tr> }</tbody></table></div></section>

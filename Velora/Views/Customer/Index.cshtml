@@ -1,0 +1,18 @@
+@model Velora.Features.Accounts.CustomerDashboardViewModel
+@{ ViewData["Title"] = "My Account"; }
+@if (TempData["RecoveryCodes"] is string recoveryCodes)
+{
+    <aside class="admin-notice" role="alert"><strong>Recovery codes (shown once):</strong> <code class="break-code">@recoveryCodes</code></aside>
+}
+<section class="customer-page shell">
+    <header><p class="eyebrow">Your Velora</p><h1>My account</h1></header>
+    @if (TempData["AccountMessage"] is string message) { <div class="admin-notice">@message</div> }
+    @if (TempData["AccountError"] is string error) { <div class="admin-notice error">@error</div> }
+    <div class="customer-grid">
+        <div class="account-section"><h2>Profile</h2><form asp-action="Profile" method="post"><div class="form-row"><div class="field"><label>First name</label><input name="FirstName" value="@Model.Profile?.FirstName" /></div><div class="field"><label>Last name</label><input name="LastName" value="@Model.Profile?.LastName" /></div></div><div class="field"><label>Email</label><input value="@Model.Profile?.Email" disabled /></div><div class="field"><label>Phone</label><input name="PhoneNumber" value="@Model.Profile?.PhoneNumber" /></div><input type="hidden" name="Email" value="@Model.Profile?.Email" /><button class="button button-dark">Save profile</button></form></div>
+        <div class="account-section"><div class="panel-heading"><h2>Addresses</h2><a class="text-link" asp-action="NewAddress">Add address</a></div>@foreach (var address in Model.Addresses) { <div class="address-card"><strong>@address.Label @(address.IsDefault ? "· Default" : "")</strong><p>@address.RecipientName · @address.PhoneNumber<br />@address.Line1 @address.Line2<br />@address.City, @address.CountryCode</p><a asp-action="Address" asp-route-id="@address.Id">Edit</a></div> }</div>
+        <div class="account-section customer-span"><h2>Orders</h2>@if (Model.Orders.Count == 0) { <p>No orders yet.</p> } else { <div class="admin-table-wrap"><table class="admin-table"><thead><tr><th>Order</th><th>Date</th><th>Status</th><th>Total</th></tr></thead><tbody>@foreach (var order in Model.Orders) { <tr><td><a asp-action="Order" asp-route-id="@order.Id">@order.Number</a></td><td>@order.CreatedAtUtc.ToString("dd MMM yyyy")</td><td>@order.Status</td><td>@order.Total.ToString("N2") @order.Currency</td></tr> }</tbody></table></div> }</div>
+        <div class="account-section customer-span"><h2>Wishlist</h2><div class="wishlist-grid">@foreach (var item in Model.Wishlist) { <a asp-controller="Product" asp-action="Details" asp-route-slug="@item.Slug"><img src="@item.ImageUrl" alt="@item.Name" /><strong>@item.Name</strong><span>$@item.Price.ToString("N2")</span></a> }</div></div>
+        <div class="account-section"><h2>Security</h2><p>Administrators must use an authenticator to enter the admin area.</p><a class="button button-outline" asp-action="TwoFactor">Set up two-factor authentication</a><h3>Change password</h3><form asp-action="ChangePassword" method="post"><div class="field"><label>Current password</label><input name="CurrentPassword" type="password" autocomplete="current-password" /></div><div class="field"><label>New password</label><input name="NewPassword" type="password" autocomplete="new-password" /></div><div class="field"><label>Confirm password</label><input name="ConfirmPassword" type="password" autocomplete="new-password" /></div><button class="button button-dark">Change password</button></form></div>
+    </div>
+</section>

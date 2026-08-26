@@ -1,0 +1,3 @@
+@model Velora.Features.Accounts.RecoveryCodeLoginViewModel
+@{ ViewData["Title"] = "Recovery code"; }
+<section class="account-shell narrow-shell"><p class="eyebrow">Secure sign in</p><h1>Recovery code</h1><p>Each recovery code can be used once.</p><form method="post" class="account-form"><div asp-validation-summary="ModelOnly" class="validation-summary"></div><input asp-for="ReturnUrl" type="hidden" /><label asp-for="RecoveryCode">Recovery code</label><input asp-for="RecoveryCode" autocomplete="one-time-code" autofocus /><span asp-validation-for="RecoveryCode"></span><button class="button button-dark" type="submit">Sign in</button></form></section>

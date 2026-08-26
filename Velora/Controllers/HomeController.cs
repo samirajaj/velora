@@ -2,11 +2,13 @@ using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Velora.Application.Catalog;
 using Velora.Models;
+using Microsoft.AspNetCore.OutputCaching;
 
 namespace Velora.Controllers;
 
 public class HomeController(IProductCatalogService catalog) : Controller
 {
+    [OutputCache(PolicyName = "Storefront")]
     public async Task<IActionResult> Index(CancellationToken cancellationToken)
     {
         var model = new HomeViewModel(

@@ -1,9 +1,26 @@
+@using System.Text.Json
 @model Velora.Application.Catalog.ProductDetails
-@{ ViewData["Title"] = Model.Name; ViewData["Description"] = Model.Description; }
+@{
+    var productUrl = $"{Context.Request.Scheme}://{Context.Request.Host}{Context.Request.Path}";
+    var schema = new Dictionary<string, object?>
+    {
+        ["@context"] = "https://schema.org",
+        ["@type"] = "Product",
+        ["name"] = Model.Name,
+        ["description"] = Model.Description,
+        ["image"] = Model.Images.Count > 0 ? Model.Images : new[] { Model.ImageUrl },
+        ["sku"] = Model.Options.FirstOrDefault()?.Sku,
+        ["url"] = productUrl,
+        ["offers"] = new { type = "Offer", priceCurrency = "USD", price = Model.Price, availability = Model.Options.Any(x => x.StockQuantity > 0) ? "https://schema.org/InStock" : "https://schema.org/OutOfStock", url = productUrl }
+    };
+}
 <section class="product-detail shell">
-    <div class="detail-image"><img src="@Model.ImageUrl" alt="@Model.Name" /></div>
+    <div class="detail-gallery">@foreach (var image in (Model.Images.Count > 0 ? Model.Images : new[] { Model.ImageUrl })) { <div class="detail-image"><img src="@image" alt="@Model.Name" loading="lazy" /></div> }</div>
     <div class="detail-content"><p class="breadcrumbs"><a asp-action="Index">Collection</a> / <a asp-action="Index" asp-route-category="@Model.CategorySlug">@Model.CategoryName</a></p><p class="eyebrow">@Model.CategoryName</p><h1>@Model.Name</h1><p class="detail-price">$@Model.Price.ToString("N0") @if (Model.CompareAtPrice is not null) { <del>$@Model.CompareAtPrice.Value.ToString("N0")</del> }</p><p class="detail-description">@Model.Description</p>
         <form class="add-form" asp-controller="Cart" asp-action="Add" method="post"><input type="hidden" name="slug" value="@Model.Slug" /><label for="variant">Select an option</label><select id="variant" name="variantId" required><option value="" disabled selected>Choose size</option>@foreach (var option in Model.Options) { <option value="@option.Id" disabled="@(option.StockQuantity <= 0)">@option.Color · @option.Size @(option.StockQuantity <= 0 ? "— Sold out" : "")</option> }</select><div class="quantity-row"><label for="quantity">Quantity</label><input id="quantity" name="quantity" type="number" min="1" max="10" value="1" /></div><button class="button button-dark" type="submit">Add to bag</button></form>
-        <div class="detail-notes"><details open><summary>Details & care</summary><p>Designed for a timeless wardrobe. Store with care and follow the instructions on the garment label.</p></details><details><summary>Delivery & returns</summary><p>Complimentary delivery over $200. Returns are accepted within 30 days.</p></details></div>
+        @if (User.Identity?.IsAuthenticated == true) { <form asp-controller="Customer" asp-action="Wishlist" asp-route-productId="@Model.Id" asp-route-returnUrl="@Context.Request.Path" method="post"><button class="wishlist-button" type="submit">♡ Save to wishlist</button></form> }
+        <div class="detail-notes"><details open><summary>Details & care</summary><p>@(string.IsNullOrWhiteSpace(Model.Material) ? "Designed for a timeless wardrobe." : Model.Material) @(string.IsNullOrWhiteSpace(Model.CareInstructions) ? "Follow the instructions on the garment label." : Model.CareInstructions)</p></details><details><summary>Delivery & returns</summary><p>Complimentary delivery over $200. Returns are accepted within 30 days.</p></details></div>
     </div>
 </section>
+@if (Model.RelatedProducts.Count > 0) { <section class="section shell"><div class="section-heading"><div><p class="eyebrow">Complete the look</p><h2>Related pieces</h2></div></div><div class="product-grid">@foreach (var product in Model.RelatedProducts) { <partial name="_ProductCard" model="product" /> }</div></section> }
+<script type="application/ld+json" nonce="@Context.Items["CspNonce"]">@Html.Raw(JsonSerializer.Serialize(schema))</script>

@@ -1,0 +1,3 @@
+@model bool
+@{ ViewData["Title"] = "Email Confirmation"; }
+<section class="account-page shell-narrow"><div class="account-card"><p class="eyebrow">Your Velora account</p><h1>@(Model ? "Email confirmed" : "Confirmation failed")</h1><p class="account-intro">@(Model ? "Your account is active and ready to use." : "This confirmation link is invalid or has expired.")</p><a class="button button-dark" asp-action="Login">Sign in</a></div></section>

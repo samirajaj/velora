@@ -1,0 +1,3 @@
+@model Velora.Application.Commerce.OrderDetailsModel
+@{ ViewData["Title"] = "Order Confirmed"; }
+<section class="account-page shell-narrow"><div class="account-card confirmation-card"><p class="eyebrow">Thank you</p><h1>Order confirmed</h1><p class="account-intro">Your order <strong>@Model.Number</strong> has been received. We will contact you before delivery.</p><div class="confirmation-total"><span>Cash due on delivery</span><strong>$@Model.Total.ToString("N2") @Model.Currency</strong></div><a class="button button-dark" asp-controller="Customer" asp-action="Order" asp-route-id="@Model.Id">View order</a></div></section>

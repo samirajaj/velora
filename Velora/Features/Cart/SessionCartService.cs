@@ -37,6 +37,7 @@ public sealed class SessionCartService(IHttpContextAccessor accessor) : ICartSer
         items.RemoveAll(x => x.VariantId == variantId);
         Write(items);
     }
+    public void Clear() => Session.Remove(CartKey);
 
     private List<CartItem> Read() => JsonSerializer.Deserialize<List<CartItem>>(Session.GetString(CartKey) ?? "[]", JsonOptions) ?? [];
     private void Write(List<CartItem> items) => Session.SetString(CartKey, JsonSerializer.Serialize(items, JsonOptions));
